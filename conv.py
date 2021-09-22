@@ -7,7 +7,7 @@ import sqlite3
 import csv
 
 path1 = '/LBApp/adreses.csv'
-path2 = 'LBData/address_coords.db'
+path2 = '/LBData/address_coords.db'
 
 conn = sqlite3.connect(path2) 
 c = conn.cursor()
