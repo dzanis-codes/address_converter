@@ -6,8 +6,10 @@ from geopy.extra.rate_limiter import RateLimiter
 import sqlite3
 import csv
 
-path = 'address_coords.db'
-conn = sqlite3.connect(path) 
+path1 = '/LBApp/adreses.csv'
+path2 = 'LBData/address_coords.db'
+
+conn = sqlite3.connect(path2) 
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS results
            (name_id INTEGER PRIMARY KEY, orig_address, search_term, latitude, longitude, type, class)''')
@@ -20,7 +22,7 @@ geocode = RateLimiter(locator.geocode, min_delay_seconds=1)
 
 
 
-with open('Book1.csv', encoding='utf-8-sig') as o:
+with open(path1, encoding='utf-8-sig') as o:
     myData = csv.reader(o, quotechar='"') 
     for row in myData:
         #print(row)
