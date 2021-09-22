@@ -15,15 +15,12 @@ c.execute('''CREATE TABLE IF NOT EXISTS results
 conn.commit()
 
 
-
 locator = Nominatim(user_agent='none')
 geocode = RateLimiter(locator.geocode, min_delay_seconds=1)
 
 
 
-
-
-with open('rest_adreses.csv', encoding='utf-8-sig') as o:
+with open('Book1.csv', encoding='utf-8-sig') as o:
     myData = csv.reader(o, quotechar='"') 
     for row in myData:
         #print(row)
@@ -37,10 +34,12 @@ with open('rest_adreses.csv', encoding='utf-8-sig') as o:
         element = element.replace('nov.', 'novads').strip()
         length_c = element.find('LV-')
         if length_c < 0:
-            length_c = len(element)
+            length_c = len(element) + 2
         else:
             print("ok")
-        element = element[:length_c]
+        
+        #naakošā rindiņa nogriež indeksu, jo openstreetmap tas nepatīk
+        element = element[:length_c - 2]
         print(element)
    
 
@@ -48,23 +47,67 @@ with open('rest_adreses.csv', encoding='utf-8-sig') as o:
         if location == None:
             print("na")
             len_pag = element.find(' pagasts')
-            pag_nosaukums_start = element.rfind(' ', 0, len_pag)
-            print(len_pag)
-            print(pag_nosaukums_start)
-            part1 = element[:pag_nosaukums_start]
-            part2 = element[len_pag + 8:]
-            element = part1 + part2
-            print(element)
-            location = locator.geocode(element) 
-            print(location.latitude)
-            print(location.longitude)
+            
+            #ja nevar atrast dēļ pagasta tad šis
+            if len_pag > 0:
+                pag_nosaukums_start = element.rfind(' ', 0, len_pag)
+                print(len_pag)
+                print(pag_nosaukums_start)
+                part1 = element[:pag_nosaukums_start]
+                part2 = element[len_pag + 8:]
+                element = part1 + part2
+                print(element)
+                location = locator.geocode(element)
+                if location != None: 
 
-            latitude = location.latitude
-            longitude = location.longitude
-            a_type = location.raw['type']
-            a_class = location.raw['class']            
-            #sheit jamegina novienadot shis divas lietas varbut vienaa funkcijaa
+                    print(location.latitude)
+                    print(location.longitude)
 
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    a_type = location.raw['type']
+                    a_class = location.raw['class']            
+                    #sheit jamegina novienadot shis divas lietas varbut vienaa funkcijaa
+                elif element.find(' novads') > 0:
+                    print(element.find(' novads'))
+                    nov_nosaukums_start = element.rfind(' ', 0, element.find(' novads'))
+                    part1 = element[:pag_nosaukums_start]
+                    part2 = element[len_pag + 7:]
+                    element = part1 + part2
+                    print(element)
+                    location = locator.geocode(element)
+                    if location != None: 
+                        latitude = 'na'
+                        longitude = 'na'
+                        a_type = 'na'
+                        a_class = 'na'   
+                else:    
+                    latitude = 'na'
+                    longitude = 'na'
+                    a_type = 'na'
+                    a_class = 'na'              
+            #ja nevar atrast dēļ korpusa tad šis
+            elif element.find('k-') > 0:
+                len_korpuss = element.find('k-')
+                print(len_korpuss)
+                part1 = element[:len_korpuss]
+                part2 = element[len_korpuss + 3:]
+                element = part1 + part2
+                print(element)
+                location = locator.geocode(element) 
+                if location != None: 
+                    print(location.latitude)
+                    print(location.longitude)
+
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    a_type = location.raw['type']
+                    a_class = location.raw['class']
+            else:
+                latitude = 'na'
+                longitude = 'na'
+                a_type = 'na'
+                a_class = 'na'      
         else:
             print(location.latitude)
             print(location.longitude)
