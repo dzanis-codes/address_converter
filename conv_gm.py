@@ -103,8 +103,8 @@ with open(path1, encoding='utf-8-sig') as o:
 
                     latitude = location.latitude
                     longitude = location.longitude
-                    a_type = location.raw['type']
-                    a_class = location.raw['class']
+                    a_type = 'na'
+                    a_class = 'na'
             else:
                 latitude = 'na'
                 longitude = 'na'
@@ -113,11 +113,13 @@ with open(path1, encoding='utf-8-sig') as o:
         else:
             print(location.latitude)
             print(location.longitude)
+            print(location)
+            print(location.raw)
 
             latitude = location.latitude
             longitude = location.longitude
-            a_type = location.raw['type']
-            a_class = location.raw['class']     
+            a_type = 'na'
+            a_class = 'na'     
         
         sql_entry = (str(original_a), str(element), str(latitude), str(longitude), str(a_type), str(a_class)) 
         c.execute("INSERT INTO results VALUES (null, ?, ?, ?, ?, ?, ?)", sql_entry)
