@@ -6,8 +6,8 @@ from geopy.extra.rate_limiter import RateLimiter
 import sqlite3
 import csv
 
-path1 = '/LBApp/adreses.csv'
-path2 = '/LBData/address_coords.db'
+path1 = '/LBApp/adreses_for_gm.txt'
+path2 = '/LBData/address_coords2.db'
 
 conn = sqlite3.connect(path2) 
 c = conn.cursor()
@@ -17,7 +17,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS results
 conn.commit()
 
 
-locator = Nominatim(user_agent='none')
+locator = GoogleV3(api_key=google_key)
 geocode = RateLimiter(locator.geocode, min_delay_seconds=1)
 
 
