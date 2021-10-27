@@ -45,7 +45,9 @@ with open(path1, encoding='utf-8-sig') as o:
         print(element)
    
 
-        location = locator.geocode(element) 
+        location = locator.geocode(element)
+        print(location)
+        print(location.raw)
         if location == None:
             print("na")
             len_pag = element.find(' pagasts')
@@ -67,8 +69,8 @@ with open(path1, encoding='utf-8-sig') as o:
 
                     latitude = location.latitude
                     longitude = location.longitude
-                    a_type = location.raw['type']
-                    a_class = location.raw['class']            
+                    a_type = 'na'
+                    a_class = 'na'          
                     #sheit jamegina novienadot shis divas lietas varbut vienaa funkcijaa
                 elif element.find(' novads') > 0:
                     print(element.find(' novads'))
