@@ -6,8 +6,8 @@ from geopy.extra.rate_limiter import RateLimiter
 import sqlite3
 import csv
 
-path1 = '/LBApp/adreses_for_gm.txt'
-path2 = '/LBData/address_coords2.db'
+path1 = '/LBApp/adreses_for_gm.csv'
+path2 = '/LBData/address_coords3.db'
 
 conn = sqlite3.connect(path2) 
 c = conn.cursor()
@@ -17,7 +17,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS results
 conn.commit()
 
 
-locator = GoogleV3(api_key=google_key)
+locator = GoogleV3(api_key='')
 geocode = RateLimiter(locator.geocode, min_delay_seconds=1)
 
 
@@ -40,19 +40,19 @@ with open(path1, encoding='utf-8-sig') as o:
         else:
             print("ok")
         
-        #naakošā rindiņa nogriež indeksu, jo openstreetmap tas nepatīk
+        #naakoÅÄ rindiÅ†a nogrieÅ¾ indeksu, jo openstreetmap tas nepatÄ«k
         element = element[:length_c - 2]
         print(element)
    
 
         location = locator.geocode(element)
         print(location)
-        print(location.raw)
+        #print(location.raw)
         if location == None:
             print("na")
             len_pag = element.find(' pagasts')
             
-            #ja nevar atrast dēļ pagasta tad šis
+            #ja nevar atrast dÄ“Ä¼ pagasta tad Åis
             if len_pag > 0:
                 pag_nosaukums_start = element.rfind(' ', 0, len_pag)
                 print(len_pag)
@@ -90,7 +90,7 @@ with open(path1, encoding='utf-8-sig') as o:
                     longitude = 'na'
                     a_type = 'na'
                     a_class = 'na'              
-            #ja nevar atrast dēļ korpusa tad šis
+            #ja nevar atrast dÄ“Ä¼ korpusa tad Åis
             elif element.find('k-') > 0:
                 len_korpuss = element.find('k-')
                 print(len_korpuss)
@@ -116,7 +116,7 @@ with open(path1, encoding='utf-8-sig') as o:
             print(location.latitude)
             print(location.longitude)
             print(location)
-            print(location.raw)
+            #print(location.raw)
 
             latitude = location.latitude
             longitude = location.longitude
