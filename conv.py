@@ -7,7 +7,8 @@ import sqlite3
 import csv
 
 path1 = '/LBApp/adreses.csv'
-path2 = '/LBData/address_coords.db'
+path2 = '/LBData/address_coords5.db'
+
 
 conn = sqlite3.connect(path2) 
 c = conn.cursor()
@@ -25,7 +26,7 @@ geocode = RateLimiter(locator.geocode, min_delay_seconds=1)
 with open(path1, encoding='utf-8-sig') as o:
     myData = csv.reader(o, quotechar='"') 
     for row in myData:
-        #print(row)
+        print(row)
         #search_term = []
         original_a = row[0]
         element = row[0]
@@ -40,17 +41,17 @@ with open(path1, encoding='utf-8-sig') as o:
         else:
             print("ok")
         
-        #naakošā rindiņa nogriež indeksu, jo openstreetmap tas nepatīk
+ 
         element = element[:length_c - 2]
         print(element)
    
 
         location = locator.geocode(element) 
         if location == None:
-            print("na")
+            print("pilno adresi neatrada")
             len_pag = element.find(' pagasts')
-            
-            #ja nevar atrast dēļ pagasta tad šis
+            print("pagasts:" + str(len_pag))
+        
             if len_pag > 0:
                 pag_nosaukums_start = element.rfind(' ', 0, len_pag)
                 print(len_pag)
@@ -70,25 +71,12 @@ with open(path1, encoding='utf-8-sig') as o:
                     a_type = location.raw['type']
                     a_class = location.raw['class']            
                     #sheit jamegina novienadot shis divas lietas varbut vienaa funkcijaa
-                elif element.find(' novads') > 0:
-                    print(element.find(' novads'))
-                    nov_nosaukums_start = element.rfind(' ', 0, element.find(' novads'))
-                    part1 = element[:pag_nosaukums_start]
-                    part2 = element[len_pag + 7:]
-                    element = part1 + part2
-                    print(element)
-                    location = locator.geocode(element)
-                    if location != None: 
-                        latitude = 'na'
-                        longitude = 'na'
-                        a_type = 'na'
-                        a_class = 'na'   
                 else:    
                     latitude = 'na'
                     longitude = 'na'
                     a_type = 'na'
                     a_class = 'na'              
-            #ja nevar atrast dēļ korpusa tad šis
+            #ja nevar atrast dÄ“Ä¼ korpusa tad Åis
             elif element.find('k-') > 0:
                 len_korpuss = element.find('k-')
                 print(len_korpuss)
@@ -123,3 +111,5 @@ with open(path1, encoding='utf-8-sig') as o:
         c.execute("INSERT INTO results VALUES (null, ?, ?, ?, ?, ?, ?)", sql_entry)
         
         conn.commit()
+        latitude = 'na'
+        longitude = 'na'
